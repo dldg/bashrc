@@ -38,10 +38,9 @@ export PATH="/usr/local/opt/openssl/bin":"$PATH"
 
 # To have colors for ls and all grep commands such as grep, egrep and zgrep
 export CLICOLOR=1
-export LS_COLORS='ex=00:su=00:sg=00:ca=00:no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.7z=01;31:*.xz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.flac=01;35:*.mp3=01;35:*.mpc=01;35:*.ogg=01;35:*.wav=01;35:';
+export LS_COLORS='ex=00:su=00:sg=00:ca=00:no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.7z=01;31:*.xz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.flac=01;35:*.mp3=01;35:*.mpc=01;35:*.ogg=01;35:*.wav=01;35:'
 
-export EDITOR=vim;
-
+export EDITOR=vim
 
 #######################################################
 # GENERAL ALIAS'S
@@ -66,7 +65,7 @@ shopt -s checkhash
 shopt -s mailwarn
 shopt -s sourcepath
 shopt -s no_empty_cmd_completion
-shopt -s extglob   # useful for programmable completion
+shopt -s extglob # useful for programmable completion
 
 # Alias's to modified commands
 alias cp='cp -i'
@@ -80,7 +79,7 @@ alias cls='clear'
 alias vi='vim'
 alias svi='sudo vi'
 alias vis='vim "+set si"'
-alias grep='grep --color';
+alias grep='grep --color'
 
 # Change directory aliases
 alias home='cd ~'
@@ -94,20 +93,20 @@ alias .....='cd ../../../..'
 alias rmd='/bin/rm  --recursive --force --verbose '
 
 # Alias's for multiple directory listing commands
-alias la='ls -Alh' # show hidden files
-alias ls='ls -aFh' # add colors and file type extensions
-alias lx='ls -lXBh' # sort by extension
-alias lk='ls -lSrh' # sort by size
-alias lc='ls -lcrh' # sort by change time
-alias lu='ls -lurh' # sort by access time
-alias lr='ls -lRh' # recursive ls
-alias lt='ls -ltrh' # sort by date
-alias lm='ls -alh |more' # pipe through 'more'
-alias lw='ls -xAh' # wide listing format
-alias ll='ls -Fls' # long listing format
-alias labc='ls -lap' #alphabetical sort
+alias la='ls -Alh'               # show hidden files
+alias ls='ls -aFh'               # add colors and file type extensions
+alias lx='ls -lXBh'              # sort by extension
+alias lk='ls -lSrh'              # sort by size
+alias lc='ls -lcrh'              # sort by change time
+alias lu='ls -lurh'              # sort by access time
+alias lr='ls -lRh'               # recursive ls
+alias lt='ls -ltrh'              # sort by date
+alias lm='ls -alh |more'         # pipe through 'more'
+alias lw='ls -xAh'               # wide listing format
+alias ll='ls -Fls'               # long listing format
+alias labc='ls -lap'             #alphabetical sort
 alias lf="ls -l | egrep -v '^d'" # files only
-alias ldir="ls -l | egrep '^d'" # directories only
+alias ldir="ls -l | egrep '^d'"  # directories only
 
 # alias chmod commands
 alias mx='chmod a+x'
@@ -175,7 +174,6 @@ alias gitlogstat="git log --stat"
 alias gitinfo="git remote show origin"
 alias gd="git diff"
 
-
 #######################################################
 # SPECIAL FUNCTIONS
 #######################################################
@@ -183,72 +181,80 @@ alias gd="git diff"
 # grep only h,cpp,c,cc files.
 # usage: grep [ -p PATH ]  [ grep flags ] STRING [ grep flags ]
 function grepcpp() {
-        path=$PWD
-        if [ "$1" = '-p' ];
-        then
-                `cd $2` # check valid path ('cd -' is not required)
-                error_status=$?
-                [ $error_status != 0 ] && return $error_status
-                path=`cd $2; pwd`
-                shift 2
-        fi
-        find $path -type f \( -name '*.h' -o -name '*.cpp' -o -name '*.cc' -o -name '*.c' \) -print0 | xargs -r0 grep --color=always "$@" -H -n | sed 's/:/ +/' | sed 's/:/ : /'
+	path=$PWD
+	if [ "$1" = '-p' ]; then
+		$(cd $2) # check valid path ('cd -' is not required)
+		error_status=$?
+		[ $error_status != 0 ] && return $error_status
+		path=$(
+			cd $2
+			pwd
+		)
+		shift 2
+	fi
+	find $path -type f \( -name '*.h' -o -name '*.cpp' -o -name '*.cc' -o -name '*.c' \) -print0 | xargs -r0 grep --color=always "$@" -H -n | sed 's/:/ +/' | sed 's/:/ : /'
 }
 
-#--------------------------------------------
 # Search Function into a list of *.a and *.so
-#--------------------------------------------
-function find_in_libs()
-{
-	for library in `find $1 -type f` ; do 
-                local cmd="nm -C $library | grep '$2'"
-                local res=$( eval "$cmd" ) ; 
-                if [ -n "$res" ] ; then 
-                        echo "$library:";
-                        echo "$res";
-                else
-                        echo -n "."
-                fi
-        done
+function find_in_libs() {
+	for library in $(find $1 -type f); do
+		local cmd="nm -C $library | grep '$2'"
+		local res=$(eval "$cmd")
+		if [ -n "$res" ]; then
+			echo "$library:"
+			echo "$res"
+		else
+			echo -n "."
+		fi
+	done
 }
 
-function keep_connected(){
-	while : ; do echo -ne "."; sleep 30; done
+function keep_connected() {
+	while :; do
+		echo -ne "."
+		sleep 30
+	done
 }
 
-function pskill()
-{
-        local pid
+function pskill() {
+	local pid
 
-        pid=`ps -ax | grep $1 | grep -v grep | gawk '{ print $1 }'`
-        echo -n "killing $1 (process $pid)..."
-        kill -9 $pid
-        echo "slaughtered."
+	pid=$(ps -ax | grep $1 | grep -v grep | gawk '{ print $1 }')
+	echo -n "killing $1 (process $pid)..."
+	kill -9 $pid
+	echo "slaughtered."
 }
 
-function ff() { find . -name '*'$1'*' ; }                 # find a file
-function fe() { find . -name '*'$1'*' -exec $2 {} \; ; }  # find a file and run $2 on it 
-function fstr() # find a string in a set of files
-{
-    if [ "$#" -gt 2 ]; then
-        echo "$# Usage: fstr \"pattern\" [files] "
-        return;
-    fi
-    SMSO=$(tput smso)
-    RMSO=$(tput rmso)
-    if [ -d "$2" ] ; then
-	file=""
-	directory=$2
-    else
-	file="$(basename "$2")"
-	directory="$(dirname "$2")"
-    fi
-    find "$directory" -type f -name "${file:-*}" -print | xargs grep -sin "$1" | sed "s/$1/$SMSO$1$RMSO/gI"
+# find a file
+function ff() {
+	find . -name '*'$1'*'
+}
+
+# find a file and run $2 on it
+function fe() {
+	find . -name '*'$1'*' -exec $2 {} \;
+}
+
+# find a string in a set of files
+function fstr() {
+	if [ "$#" -gt 2 ]; then
+		echo "$# Usage: fstr \"pattern\" [files] "
+		return
+	fi
+	SMSO=$(tput smso)
+	RMSO=$(tput rmso)
+	if [ -d "$2" ]; then
+		file=""
+		directory=$2
+	else
+		file="$(basename "$2")"
+		directory="$(dirname "$2")"
+	fi
+	find "$directory" -type f -name "${file:-*}" -print | xargs grep -sin "$1" | sed "s/$1/$SMSO$1$RMSO/gI"
 }
 
 # Searches for text in all files in the current folder
-ftext ()
-{
+ftext() {
 	# -i case-insensitive
 	# -I ignore binary files
 	# -H causes filename to be printed
@@ -260,11 +266,10 @@ ftext ()
 }
 
 # Copy file with a progress bar
-cpp()
-{
+cpp() {
 	set -e
-	strace -q -ewrite cp -- "${1}" "${2}" 2>&1 \
-	| awk '{
+	strace -q -ewrite cp -- "${1}" "${2}" 2>&1 |
+		awk '{
 	count += $NF
 	if (count % 10 == 0) {
 		percent = count / total_size * 100
@@ -281,9 +286,8 @@ cpp()
 }
 
 # Copy and go to the directory
-cpg ()
-{
-	if [ -d "$2" ];then
+cpg() {
+	if [ -d "$2" ]; then
 		cp $1 $2 && cd $2
 	else
 		cp $1 $2
@@ -291,9 +295,8 @@ cpg ()
 }
 
 # Move and go to the directory
-mvg ()
-{
-	if [ -d "$2" ];then
+mvg() {
+	if [ -d "$2" ]; then
 		mv $1 $2 && cd $2
 	else
 		mv $1 $2
@@ -301,21 +304,18 @@ mvg ()
 }
 
 # Create and go to the directory
-mkdirg ()
-{
+mkdirg() {
 	mkdir -p $1
 	cd $1
 }
 
 # Goes up a specified number of directories  (i.e. up 4)
-up ()
-{
+up() {
 	local d=""
 	limit=$1
-	for ((i=1 ; i <= limit ; i++))
-		do
-			d=$d/..
-		done
+	for ((i = 1; i <= limit; i++)); do
+		d=$d/..
+	done
 	d=$(echo $d | sed 's/^\///')
 	if [ -z "$d" ]; then
 		d=..
@@ -324,14 +324,12 @@ up ()
 }
 
 # Returns the last 2 fields of the working directory
-pwdtail ()
-{
-	pwd|awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
+pwdtail() {
+	pwd | awk -F/ '{nlast = NF -1;print $nlast"/"$NF}'
 }
 
 # View Apache logs
-apachelog ()
-{
+apachelog() {
 	if [ -f /etc/httpd/conf/httpd.conf ]; then
 		cd /var/log/httpd && ls -xAh && multitail --no-repeat -c -s 2 /var/log/httpd/*_log
 	else
@@ -340,8 +338,7 @@ apachelog ()
 }
 
 # Edit the Apache configuration
-apacheconfig ()
-{
+apacheconfig() {
 	if [ -f /etc/httpd/conf/httpd.conf ]; then
 		sedit /etc/httpd/conf/httpd.conf
 	elif [ -f /etc/apache2/apache2.conf ]; then
@@ -354,8 +351,7 @@ apacheconfig ()
 }
 
 # Edit the MySQL configuration file
-mysqlconfig ()
-{
+mysqlconfig() {
 	if [ -f /etc/my.cnf ]; then
 		sedit /etc/my.cnf
 	elif [ -f /etc/mysql/my.cnf ]; then
@@ -376,62 +372,65 @@ mysqlconfig ()
 }
 
 # Trim leading and trailing spaces (for scripts)
-trim()
-{
+trim() {
 	local var=$@
-	var="${var#"${var%%[![:space:]]*}"}"  # remove leading whitespace characters
-	var="${var%"${var##*[![:space:]]}"}"  # remove trailing whitespace characters
+	var="${var#"${var%%[![:space:]]*}"}" # remove leading whitespace characters
+	var="${var%"${var##*[![:space:]]}"}" # remove trailing whitespace characters
 	echo -n "$var"
 }
 
 # Git branch in prompt.
-parse_git_branch()
-{
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/' | tr -d '[:space:]'
+parse_git_branch() {
+	git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/' | tr -d '[:space:]'
 }
 
-function sendviaemail()
-{
-	echo "$*" | mail -s "Message from $HOSTNAME at $(date)"	$USER@ptc.com
+function sendviaemail() {
+	echo "$*" | mail -s "Message from $HOSTNAME at $(date)" $USER@ptc.com
 }
 
-function counter_with_msg()
-{
-	local counter;
+function counter_with_msg() {
+	local counter
 	local duration=$1
 	local msg=$2
-	for ((counter=1; counter <= $duration ; counter++)) ; do
-        echo -en "$(date) - $msg : $counter/$duration                 \r";
-        sleep 1;
-    done;
+	for ((counter = 1; counter <= $duration; counter++)); do
+		echo -en "$(date) - $msg : $counter/$duration                 \r"
+		sleep 1
+	done
 }
 
-function ii()   # get current host related info
-{
-    echo -e "\nYou are logged on ${RED}$HOST"
-    echo -e "\nAdditionnal information:$NC " ; uname -a
-    echo -e "\n${RED}Users logged on:$NC " ; w -h
-    echo -e "\n${RED}Current date :$NC " ; date
-    echo -e "\n${RED}Machine stats :$NC " ; uptime
-    echo -e "\n${RED}Memory stats :$NC " ; free
-    my_ip 2>&- ;
-    echo -e "\n${RED}Local IP Address :$NC" ; echo ${MY_IP:-"Not connected"}
-    echo -e "\n${RED}ISP Address :$NC" ; echo ${MY_ISP:-"Not connected"}
-    echo
+# get current host related info
+function ii() {
+	echo -e "\nYou are logged on ${RED}$HOST"
+	echo -e "\nAdditionnal information:$NC "
+	uname -a
+	echo -e "\n${RED}Users logged on:$NC "
+	w -h
+	echo -e "\n${RED}Current date :$NC "
+	date
+	echo -e "\n${RED}Machine stats :$NC "
+	uptime
+	echo -e "\n${RED}Memory stats :$NC "
+	free
+	my_ip 2>&-
+	echo -e "\n${RED}Local IP Address :$NC"
+	echo ${MY_IP:-"Not connected"}
+	echo -e "\n${RED}ISP Address :$NC"
+	echo ${MY_ISP:-"Not connected"}
+	echo
 }
 
-function my_ip() # get IP adresses
-{
-    MY_IP=$(/sbin/ifconfig eth0 | awk '/inet/ { print $2 } ' | sed -e s/addr://)
+# get IP adresses
+function my_ip() {
+	MY_IP=$(/sbin/ifconfig eth0 | awk '/inet/ { print $2 } ' | sed -e s/addr://)
 }
 
-function lowercase()  # move filenames to lowercase
-{
-	for file ; do
+# move filenames to lowercase
+function lowercase() {
+	for file; do
 		filename=${file##*/}
 		case "$filename" in
-			*/*) dirname==${file%/*} ;;
-			*) dirname=.;;
+		*/*) dirname==${file%/*} ;;
+		*) dirname=. ;;
 		esac
 		nf=$(echo $filename | tr A-Z a-z)
 		newname="${dirname}/${nf}"
@@ -444,49 +443,49 @@ function lowercase()  # move filenames to lowercase
 	done
 }
 
-function swap()         # swap 2 filenames around
-{
+# swap 2 filenames around
+function swap() {
 	local TMPFILE=tmp.$$
 	mv $1 $TMPFILE
 	mv $2 $1
 	mv $TMPFILE $2
 }
 
-function ask()
-{
-    echo -n "$@" '[y/n] ' ; read ans
-    case "$ans" in
-        y*|Y*) return 0 ;;
-        *) return 1 ;;
-    esac
+function ask() {
+	echo -n "$@" '[y/n] '
+	read ans
+	case "$ans" in
+	y* | Y*) return 0 ;;
+	*) return 1 ;;
+	esac
 }
 
 # repeat n times command
-function repeat()
-{
-    local i max
-    max=$1; shift;
-    for ((i=1; i <= max ; i++)); do  # --> C-like syntax
-	echo "Starting $@ $i'st time"
-	eval "$@";
-	[ -f core* ] && { echo "Abborted after $i times"; i=max; }
-    done
+function repeat() {
+	local i max
+	max=$1
+	shift
+	for ((i = 1; i <= max; i++)); do # --> C-like syntax
+		echo "Starting $@ $i'st time"
+		eval "$@"
+		[ -f core* ] && {
+			echo "Abborted after $i times"
+			i=max
+		}
+	done
 }
 
-function bash_debug()
-{
+function bash_debug() {
 	cmd=$(which $1)
 	shift
 	bash -x $cmd $*
 }
 
-function cat_json()
-{
+function cat_json() {
 	python -m json.tool $*
 }
 
-function __setprompt
-{
+function __setprompt() {
 	local LAST_COMMAND=$? # Must come first!
 
 	# Define colors
@@ -551,7 +550,7 @@ function __setprompt
 
 	# Date
 	PS1+="\[${DARKGRAY}\](\[${CYAN}\]\$(date +%a) $(date +%b-'%-m')" # Date
-	PS1+="${BLUE} $(date +'%-I':%M:%S%P)\[${DARKGRAY}\])-" # Time
+	PS1+="${BLUE} $(date +'%-I':%M:%S%P)\[${DARKGRAY}\])-"           # Time
 
 	# User and server
 	PS1+="(\[${RED}\]\u"
@@ -559,7 +558,7 @@ function __setprompt
 	# Current directory
 	PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\])-"
 
-    # Show git branch
+	# Show git branch
 	PS1+="-\[${BLUE}\]$(parse_git_branch)"
 
 	# Skip to the next line
@@ -592,16 +591,16 @@ export SDKMAN_DIR="/Users/ddahan/.sdkman"
 # added by Anaconda3 2018.12 installer
 # >>> conda init >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$(CONDA_REPORT_ERRORS=false '/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/anaconda3/bin/conda' shell.bash hook 2>/dev/null)"
 if [ $? -eq 0 ]; then
-    \eval "$__conda_setup"
+	\eval "$__conda_setup"
 else
-    if [ -f "/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/anaconda3/etc/profile.d/conda.sh"
-        CONDA_CHANGEPS1=false conda activate base
-    else
-        \export PATH="/anaconda3/bin:$PATH"
-    fi
+	if [ -f "/anaconda3/etc/profile.d/conda.sh" ]; then
+		. "/anaconda3/etc/profile.d/conda.sh"
+		CONDA_CHANGEPS1=false conda activate base
+	else
+		\export PATH="/anaconda3/bin:$PATH"
+	fi
 fi
 unset __conda_setup
 # <<< conda init <<<
