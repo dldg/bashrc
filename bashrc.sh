@@ -559,14 +559,8 @@ function __setprompt
 	# Current directory
 	PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\])-"
 
-	# Total size of files in current directory
-	#PS1+="(\[${GREEN}\]$(du -sh . | awk '{print $1;}')\[${DARKGRAY}\]:"
-
-	# Number of files
-	#PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l | tr -d '[:space:]')\[${DARKGRAY}\])"
-
     # Show git branch
-    PS1+="-\[${BLUE}\]$(parse_git_branch)"
+	PS1+="-\[${BLUE}\]$(parse_git_branch)"
 
 	# Skip to the next line
 	PS1+="\n"
