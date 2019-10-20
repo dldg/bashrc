@@ -1,9 +1,16 @@
 #!/bin/bash
 
+set noclobber
+set ignoreeof
+set autolist
+set autocorrect correct=all
+set history=50 savehist=50
 
 #######################################################
 # EXPORTS
 #######################################################
+
+export PATH="/Users/ddahan/bin":"$PATH"
 
 # python
 export PATH="/usr/local/opt/python@2/libexec/bin:$PATH"
@@ -43,14 +50,23 @@ export EDITOR=vim;
 # Expand the history size
 export HISTFILESIZE=10000
 export HISTSIZE=1000
+export HISTTIMEFORMAT="[%d/%m %H:%M:%S] "
 
 # Don't put duplicate lines in the history and do not add lines that start with a space
 export HISTCONTROL=erasedups:ignoredups:ignorespace
 # Check the window size after each command and, if necessary, update the values of LINES and COLUMNS
 shopt -s checkwinsize
 # Causes bash to append to history instead of overwriting it so if you start a new terminal, you have old session history
-shopt -s histappend
+shopt -s histappend histreedit
 PROMPT_COMMAND='history -a'
+
+shopt -s cdspell
+shopt -s cdable_vars
+shopt -s checkhash
+shopt -s mailwarn
+shopt -s sourcepath
+shopt -s no_empty_cmd_completion
+shopt -s extglob   # useful for programmable completion
 
 # Alias's to modified commands
 alias cp='cp -i'
@@ -105,7 +121,7 @@ alias 777='chmod -R 777'
 alias h="history | grep "
 
 # Search running processes
-alias p="ps -aux | grep "
+alias psg="ps -aux | grep "
 alias topcpu="/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
 
 # Search files in the current folder
@@ -134,12 +150,101 @@ alias untar='tar -xvf'
 alias unbz2='tar -xvjf'
 alias ungz='tar -xvzf'
 
+alias loadbashrc='source ~/.bash_profile'
+alias editbashrc="vim ~/.bash_profile"
+
+alias path='echo -e ${PATH//:/\\n}'
+
 # Show all logs in /var/log
 alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
+
+alias WAIT="while : ; do echo -n "."; sleep 60; done"
+
+# git aliases
+alias gs="git status -s"
+alias gsl="git status"
+alias ga="git add"
+alias gu="git add -u"
+alias gst="git stash"
+alias gstp="git stash pop"
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gp="git push"
+alias gitlog="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
+alias gitlogstat="git log --stat"
+alias gitinfo="git remote show origin"
+alias gd="git diff"
+
 
 #######################################################
 # SPECIAL FUNCTIONS
 #######################################################
+
+# grep only h,cpp,c,cc files.
+# usage: grep [ -p PATH ]  [ grep flags ] STRING [ grep flags ]
+function grepcpp() {
+        path=$PWD
+        if [ "$1" = '-p' ];
+        then
+                `cd $2` # check valid path ('cd -' is not required)
+                error_status=$?
+                [ $error_status != 0 ] && return $error_status
+                path=`cd $2; pwd`
+                shift 2
+        fi
+        find $path -type f \( -name '*.h' -o -name '*.cpp' -o -name '*.cc' -o -name '*.c' \) -print0 | xargs -r0 grep --color=always "$@" -H -n | sed 's/:/ +/' | sed 's/:/ : /'
+}
+
+#--------------------------------------------
+# Search Function into a list of *.a and *.so
+#--------------------------------------------
+function find_in_libs()
+{
+	for library in `find $1 -type f` ; do 
+                local cmd="nm -C $library | grep '$2'"
+                local res=$( eval "$cmd" ) ; 
+                if [ -n "$res" ] ; then 
+                        echo "$library:";
+                        echo "$res";
+                else
+                        echo -n "."
+                fi
+        done
+}
+
+function keep_connected(){
+	while : ; do echo -ne "."; sleep 30; done
+}
+
+function pskill()
+{
+        local pid
+
+        pid=`ps -ax | grep $1 | grep -v grep | gawk '{ print $1 }'`
+        echo -n "killing $1 (process $pid)..."
+        kill -9 $pid
+        echo "slaughtered."
+}
+
+function ff() { find . -name '*'$1'*' ; }                 # find a file
+function fe() { find . -name '*'$1'*' -exec $2 {} \; ; }  # find a file and run $2 on it 
+function fstr() # find a string in a set of files
+{
+    if [ "$#" -gt 2 ]; then
+        echo "$# Usage: fstr \"pattern\" [files] "
+        return;
+    fi
+    SMSO=$(tput smso)
+    RMSO=$(tput rmso)
+    if [ -d "$2" ] ; then
+	file=""
+	directory=$2
+    else
+	file="$(basename "$2")"
+	directory="$(dirname "$2")"
+    fi
+    find "$directory" -type f -name "${file:-*}" -print | xargs grep -sin "$1" | sed "s/$1/$SMSO$1$RMSO/gI"
+}
 
 # Searches for text in all files in the current folder
 ftext ()
@@ -285,6 +390,101 @@ parse_git_branch()
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/' | tr -d '[:space:]'
 }
 
+function sendviaemail()
+{
+	echo "$*" | mail -s "Message from $HOSTNAME at $(date)"	$USER@ptc.com
+}
+
+function counter_with_msg()
+{
+	local counter;
+	local duration=$1
+	local msg=$2
+	for ((counter=1; counter <= $duration ; counter++)) ; do
+        echo -en "$(date) - $msg : $counter/$duration                 \r";
+        sleep 1;
+    done;
+}
+
+function ii()   # get current host related info
+{
+    echo -e "\nYou are logged on ${RED}$HOST"
+    echo -e "\nAdditionnal information:$NC " ; uname -a
+    echo -e "\n${RED}Users logged on:$NC " ; w -h
+    echo -e "\n${RED}Current date :$NC " ; date
+    echo -e "\n${RED}Machine stats :$NC " ; uptime
+    echo -e "\n${RED}Memory stats :$NC " ; free
+    my_ip 2>&- ;
+    echo -e "\n${RED}Local IP Address :$NC" ; echo ${MY_IP:-"Not connected"}
+    echo -e "\n${RED}ISP Address :$NC" ; echo ${MY_ISP:-"Not connected"}
+    echo
+}
+
+function my_ip() # get IP adresses
+{
+    MY_IP=$(/sbin/ifconfig eth0 | awk '/inet/ { print $2 } ' | sed -e s/addr://)
+}
+
+function lowercase()  # move filenames to lowercase
+{
+	for file ; do
+		filename=${file##*/}
+		case "$filename" in
+			*/*) dirname==${file%/*} ;;
+			*) dirname=.;;
+		esac
+		nf=$(echo $filename | tr A-Z a-z)
+		newname="${dirname}/${nf}"
+		if [ "$nf" != "$filename" ]; then
+			mv "$file" "$newname"
+			echo "lowercase: $file --> $newname"
+		else
+			echo "lowercase: $file not changed."
+		fi
+	done
+}
+
+function swap()         # swap 2 filenames around
+{
+	local TMPFILE=tmp.$$
+	mv $1 $TMPFILE
+	mv $2 $1
+	mv $TMPFILE $2
+}
+
+function ask()
+{
+    echo -n "$@" '[y/n] ' ; read ans
+    case "$ans" in
+        y*|Y*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# repeat n times command
+function repeat()
+{
+    local i max
+    max=$1; shift;
+    for ((i=1; i <= max ; i++)); do  # --> C-like syntax
+	echo "Starting $@ $i'st time"
+	eval "$@";
+	[ -f core* ] && { echo "Abborted after $i times"; i=max; }
+    done
+}
+
+function bash_debug()
+{
+	cmd=$(which $1)
+	shift
+	bash -x $cmd $*
+}
+
+function cat_json()
+{
+	python -m json.tool $*
+}
+
 function __setprompt
 {
 	local LAST_COMMAND=$? # Must come first!
@@ -360,10 +560,10 @@ function __setprompt
 	PS1+="\[${DARKGRAY}\]:\[${BROWN}\]\w\[${DARKGRAY}\])-"
 
 	# Total size of files in current directory
-	PS1+="(\[${GREEN}\]$(du -sh . | awk '{print $1;}')\[${DARKGRAY}\]:"
+	#PS1+="(\[${GREEN}\]$(du -sh . | awk '{print $1;}')\[${DARKGRAY}\]:"
 
 	# Number of files
-	PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l | tr -d '[:space:]')\[${DARKGRAY}\])"
+	#PS1+="\[${GREEN}\]\$(/bin/ls -A -1 | /usr/bin/wc -l | tr -d '[:space:]')\[${DARKGRAY}\])"
 
     # Show git branch
     PS1+="-\[${BLUE}\]$(parse_git_branch)"
