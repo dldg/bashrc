@@ -25,11 +25,11 @@ add_block() { # file, block-body
     fi
 }
 
-add_block "$HOME/.bashrc" "[ -r \"$ENTRY\" ] && source \"$ENTRY\""
+add_block "$HOME/.bashrc" "if [ -r \"$ENTRY\" ]; then source \"$ENTRY\"; fi"
 
 if [ "$(uname -s)" = Darwin ]; then
     # Terminal.app and iTerm2 start login shells, which read ~/.bash_profile only
-    add_block "$HOME/.bash_profile" '[ -r "$HOME/.bashrc" ] && source "$HOME/.bashrc"'
+    add_block "$HOME/.bash_profile" 'if [ -r "$HOME/.bashrc" ]; then source "$HOME/.bashrc"; fi'
 
     if command -v brew >/dev/null; then
         say "installing Homebrew bash and bash-completion@2"
